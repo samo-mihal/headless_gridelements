@@ -13,25 +13,23 @@ class GridChildrenProcessor extends \GridElementsTeam\Gridelements\DataProcessin
     protected function sortRecordsIntoMatrix()
     {
         $processedRows = [];
-        if (!empty($this->processedData['data']['tx_gridelements_backend_layout_resolved']) && !empty($this->processedData['data']['tx_gridelements_backend_layout_resolved']['config']['rows.'])) {
+        if (!empty($this->processedData['data']['tx_gridelements_backend_layout_resolved'])) {
             foreach ($this->processedData['data']['tx_gridelements_backend_layout_resolved']['config']['rows.'] as $rowNumber => $row) {
                 $columns = [];
-                if (!empty($row['columns.'])) {
-                    foreach ($row['columns.'] as $column) {
-                        $columns[] = [
-                            'config' => $column,
-                            'elements' => array_map(
-                                'trim',
-                                (
-                                array_slice(
-                                    explode('###BREAK###', $this->processedData['data']['tx_gridelements_view_columns'][$column['colPos']]),
-                                    0,
-                                    -1
-                                )
-                                )
+                foreach ($row['columns.'] as $column) {
+                    $columns[] = [
+                        'config' => $column,
+                        'elements' => array_map(
+                            'trim',
+                            (
+                            array_slice(
+                                explode('###BREAK###', $this->processedData['data']['tx_gridelements_view_columns'][$column['colPos']]),
+                                0,
+                                -1
                             )
-                        ];
-                    }
+                            )
+                        )
+                    ];
                 }
                 $processedRows[]['columns'] = $columns;
             }
