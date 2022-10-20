@@ -24,17 +24,19 @@ class GridChildrenProcessor extends \GridElementsTeam\Gridelements\DataProcessin
         }
 
         $processedRows = [];
-        if (!empty($this->processedData['data']['tx_gridelements_backend_layout_resolved'])) {
+        if (!empty($this->processedData['data']['tx_gridelements_backend_layout_resolved']) && !empty($this->processedData['data']['tx_gridelements_backend_layout_resolved']['config']['rows.'])) {
             foreach ($this->processedData['data']['tx_gridelements_backend_layout_resolved']['config']['rows.'] as $rowNumber => $row) {
                 $columns = [];
-                foreach ($row['columns.'] as $column) {
-                    if ($column['name']) {
-                        $column['name'] = $GLOBALS['TSFE'] ? $GLOBALS['TSFE']->sL($column['name']) : $column['name'];
+                if (!empty($row['columns.'])) {
+                    foreach ($row['columns.'] as $column) {
+                        if ($column['name']) {
+                            $column['name'] = $GLOBALS['TSFE'] ? $GLOBALS['TSFE']->sL($column['name']) : $column['name'];
+                        }
+                        $columns[] = [
+                            'config' => $column,
+                            'elements' => is_array($processedColumns[$column['colPos']]) === true ? $this->processRecords($processedColumns[$column['colPos']]) : []
+                        ];
                     }
-                    $columns[] = [
-                        'config' => $column,
-                        'elements' => is_array($processedColumns[$column['colPos']]) === true ? $this->processRecords($processedColumns[$column['colPos']]) : []
-                    ];
                 }
 
                 $processedRows[]['columns'] = $columns;
@@ -53,10 +55,12 @@ class GridChildrenProcessor extends \GridElementsTeam\Gridelements\DataProcessin
     private function processRecords(array $records): array {
         $processedRecords = [];
 
-        foreach ($records as $record) {
-            $processedRecords[] = $this->renderRecord($record['data']);
+        if ($records) {
+            foreach ($records as $record) {
+                $processedRecords[] = $this->renderRecord($record['data']);
+            }
         }
-
+        
         return $processedRecords;
     }
 
