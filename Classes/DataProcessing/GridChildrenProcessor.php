@@ -13,7 +13,7 @@ class GridChildrenProcessor extends \GridElementsTeam\Gridelements\DataProcessin
     protected function sortRecordsIntoMatrix()
     {
         $processedRows = [];
-        if (!empty($this->processedData['data']['tx_gridelements_backend_layout_resolved'])) {
+        if (!empty($this->processedData['data']['tx_gridelements_backend_layout_resolved']) && !empty($this->processedData['data']['tx_gridelements_backend_layout_resolved']['config']['rows.'])) {
             foreach ($this->processedData['data']['tx_gridelements_backend_layout_resolved']['config']['rows.'] as $rowNumber => $row) {
                 $columns = [];
                 foreach ($row['columns.'] as $column) {
